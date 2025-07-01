@@ -4,7 +4,7 @@
 
 int main(void)
 {
-    //setUpRegVal();
+    setUpRegVal();
 
     // Create a mutex with no initial owner
     Mutex mutex = Mutex();
