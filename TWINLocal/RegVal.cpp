@@ -4,17 +4,17 @@
 
 void setUpRegVal() //better names, auto runs
 {
-	HKEY hKey = HKEY_CURRENT_USER;
-	const char* regValueForStartup = "\Software\Microsoft\Windows\CurrentVersion\Run";
+	HKEY hKey;
+	RegOpenCurrentUser(KEY_ALL_ACCESS, &hKey);
+	const char* regValueForStartup = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
 	LPCSTR lpSubKey = reinterpret_cast<LPCSTR>(regValueForStartup);
 	DWORD ulOptions = 0;
-	REGSAM samDesired = KEY_ALL_ACCESS;
+	REGSAM samDesired = KEY_SET_VALUE;
 	HKEY phkResult;
 	LPSTR lpClass = NULL;
 	DWORD dwOptions = REG_OPTION_VOLATILE;
 	LPDWORD lpdwDisposition = LPDWORD();
 	LSTATUS regCreate = RegCreateKeyExA(hKey, lpSubKey, 0, lpClass, REG_OPTION_VOLATILE, samDesired, NULL, &phkResult, lpdwDisposition);
-	//LONG regKey = RegOpenKeyExA(hKey, lpSubKey, ulOptions, samDesired, &phkResult);
 
 	if (regCreate != ERROR_SUCCESS)
 	{
@@ -32,10 +32,16 @@ void setUpRegVal() //better names, auto runs
 
 	LPCSTR lpValueName = "TechnicianStartupWindow";
 	DWORD dwType = REG_SZ;
-	//const char* pathToExe = "C:\Users\roini\source\repos\TWINLocal\Debug\TWINLocal.exe";
-	const char* testStr = "hello";
-	const BYTE* lpData = reinterpret_cast<const BYTE*>(testStr);
-	LSTATUS regSetVal = RegSetValueExA(phkResult, lpValueName, 0, dwType, lpData, sizeof(lpData));
+	const char* pathToExe = "C:\\Users\\roini\\source\\repos\\TWINLocal\\Debug\\TWINLocal.exe";
+	int count = 0;
+	char nullTerminator = NULL;
+	while (pathToExe[count] != nullTerminator)
+	{
+		count++;
+	}
+	const BYTE* lpData = reinterpret_cast<const BYTE*>(pathToExe);
+	DWORD cbData = count; //23 or 24 with null ptr
+	LSTATUS regSetVal = RegSetValueExA(phkResult, lpValueName, 0, dwType, lpData, cbData);
 
 	if (regSetVal != ERROR_SUCCESS)
 	{
@@ -50,21 +56,4 @@ void setUpRegVal() //better names, auto runs
 			//std::cout << buffer;
 		}
 	}
-
-	/*
-	LPCWSTR lpValueName = reinterpret_cast<LPCWSTR>("C:\\Users\\roini\\source\\repos\\TWINLocal\\Debug\\TWINLocal.exe");
-	DWORD Reserved = 0;
-	DWORD dwType = REG_SZ;
-	const BYTE* lpData = NULL;
-	DWORD cbData = sizeof(lpData);
-	LONG setRegKey = RegSetValueEx(*phkResult, lpValueName, Reserved, dwType, lpData, cbData); //KEY_SET_VALUE
-	/*
-	HKEY hKey = HKEY_CURRENT_USER;
-	const char* regValueForStartup = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-	LPCWSTR lpSubKey = reinterpret_cast<LPCWSTR>(regValueForStartup);
-	DWORD ulOptions = 0;
-	REGSAM samDesired = 0;
-	PHKEY phkResult = NULL;
-	LONG regKey = RegOpenKeyEx(NULL, lpSubKey, ulOptions, samDesired, phkResult);
-	*/
 }
