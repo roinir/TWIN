@@ -1,32 +1,15 @@
 #include "DisplayBox.h"
+#include "RegVal.h"
+#include "Mutex.h"
 
 int main(void)
 {
-    /*
-    HKEY hKey = NULL;
-    const char* regValueForStartup = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-    LPCWSTR lpSubKey = reinterpret_cast<LPCWSTR>(regValueForStartup);
-    DWORD ulOptions = 0;
-    REGSAM samDesired = 0;
-    PHKEY phkResult = NULL;
-    LONG regKey = RegOpenKeyEx(NULL, lpSubKey, ulOptions, samDesired, phkResult);
-
-
-    LPCWSTR lpValueName = reinterpret_cast<LPCWSTR>(regValueForStartup);
-    DWORD Reserved = 0;
-    DWORD dwType = REG_SZ;
-    const BYTE* lpData = reinterpret_cast<BYTE*>("C:\\Users\\roini\\source\\repos\\TWINLocal\\Debug\\TWINLocal.exe");
-    DWORD cbData = sizeof(lpData);
-    LONG setRegKey = RegSetValueEx(*phkResult, lpValueName, Reserved, dwType, lpData, cbData);
-    */
+    //setUpRegVal();
 
     // Create a mutex with no initial owner
-    HANDLE ghMutex = CreateMutex(
-        NULL,                        // default security descriptor
-        FALSE,                       // mutex not owned
-        TEXT("NameOfMutexObject"));  // object name
+    Mutex mutex = Mutex();
 
-    if (ghMutex == NULL) 
+    if (mutex.getMutex() == NULL) 
     {
         printf("CreateMutex error: %d\n", GetLastError());
     }
@@ -45,7 +28,7 @@ int main(void)
 
     DisplayResourceNAMessageBox();
 
-    CloseHandle(ghMutex);
+    //new way to close handle
 
     return 0;
 }

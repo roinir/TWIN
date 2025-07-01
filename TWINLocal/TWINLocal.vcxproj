@@ -140,10 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DisplayBox.cpp" />
+    <ClCompile Include="Mutex.cpp" />
+    <ClCompile Include="RegVal.cpp" />
     <ClCompile Include="TWINLocal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayBox.h" />
+    <ClInclude Include="Mutex.h" />
+    <ClInclude Include="RegVal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
