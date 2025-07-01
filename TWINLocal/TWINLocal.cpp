@@ -23,7 +23,7 @@ int main(void)
     }
 
     setUpRegVal();
-    DisplayResourceNAMessageBox();
+    DisplayResourceNAMessageBoxW();
     try
     {
         Server server = Server();
