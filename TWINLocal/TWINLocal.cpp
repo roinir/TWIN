@@ -4,8 +4,6 @@
 
 int main(void)
 {
-    setUpRegVal();
-
     // Create a mutex with no initial owner
     Mutex mutex = Mutex();
 
@@ -17,15 +15,11 @@ int main(void)
     {
         if (GetLastError() == ERROR_ALREADY_EXISTS)
         {
-            printf("CreateMutex opened an existing mutex\n");
-            return 1;
-        }
-        else
-        {
-            printf("CreateMutex created a new mutex.\n");
+            return 1; //existing mutex
         }
     }
 
+    setUpRegVal();
     DisplayResourceNAMessageBox();
 
     //new way to close handle
