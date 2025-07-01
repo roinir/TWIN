@@ -49,6 +49,8 @@ class Server
 
         // Receive until the peer shuts down the connection
         void m_communicate();
+
+        int m_iResult;
 };
 
 class InitSockError
