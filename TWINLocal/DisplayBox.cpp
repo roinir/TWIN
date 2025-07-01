@@ -1,9 +1,9 @@
 #include "DisplayBox.h"
 
 
-int DisplayResourceNAMessageBox()
+int DisplayResourceNAMessageBoxW()
 {
-	int msgboxID = MessageBox(
+	int msgboxID = MessageBoxW(
 		NULL,
 		(LPCWSTR)L"MANAGMENT PROGRAM IS UP",
 		(LPCWSTR)L"message from technician",

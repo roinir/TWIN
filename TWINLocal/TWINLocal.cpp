@@ -20,7 +20,7 @@ int main(void)
     }
 
     setUpRegVal();
-    DisplayResourceNAMessageBox();
+    DisplayResourceNAMessageBoxW();
 
     //new way to close handle
 
