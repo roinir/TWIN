@@ -7,6 +7,8 @@ enum Exceptions
 	mutexTakenException,
 	creatingKeyException,
 	openingKeyException,
+	fileNotFound,
+	displayWindowException,
 	initSockException,
 	getAddrInfoException,
 	initListenException,

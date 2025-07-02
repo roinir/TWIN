@@ -15,6 +15,21 @@
     <ClInclude Include="Server.h" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <None Include="client.py" />
+=======
+    <ClInclude Include="DisplayBox.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RegVal.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mutex.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+>>>>>>> technician
   </ItemGroup>
 </Project>

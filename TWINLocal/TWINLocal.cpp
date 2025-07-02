@@ -3,18 +3,14 @@
 #include "RegVal.h"
 #include "Mutex.h"
 #include "Server.h"
+#include "Exception.h"
 
-#define SUCCESS 0
-#define ERROR_CREATING_MUTEX 1
-#define MUTEX_TAKEN 2
-#define ERROR_CREATING_KEY 3
-#define ERROR_OPENING_KEY 4
 
 
 
 /**
 * @brief main function that runs all the logic
-* @return SUCCESS, ERROR_CREATING_MUTEX, MUTEX_TAKEN, ERROR_CREATING_KEY, ERROR_OPENING_KEY - 0, 1, 2, 3, 4
+* @return success, creatingMutexException, mutexTakenException, creatingKeyException, openingKeyException - 0, 1, 2, 3, 4
 */
 int main(void)
 {
@@ -36,5 +32,5 @@ int main(void)
         return e.handleException();
     }
 
-    return SUCCESS;
+    return success;
 }

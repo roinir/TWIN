@@ -14,7 +14,7 @@ void RegVal::CreateRegKey()
 	if (regCreate != ERROR_SUCCESS)
 	{
 		if (regCreate == ERROR_FILE_NOT_FOUND) {
-			throw ERROR_FILE_NOT_FOUND;
+			throw FileNotFoundException();
 		}
 		else {
 			throw OpeningKeyException();
@@ -59,4 +59,10 @@ int FindingKeyException::handleException() const
 {
 	std::cout << "Key not found.\n";
 	return openingKeyException;
+}
+
+int FileNotFoundException::handleException() const
+{
+	std::cout << "File not found.\n";
+	return fileNotFound;
 }

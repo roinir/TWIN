@@ -51,3 +51,8 @@ class FindingKeyException: ExceptionClass
 {
 	int handleException() const override;
 };
+
+class FileNotFoundException : ExceptionClass
+{
+	int handleException() const override;
+};
