@@ -61,9 +61,9 @@ int main(void)
 
 
     DisplayResourceNAMessageBoxW();
-
     try
     {
+        std::cout << "About to initialize the server";
         Server server = Server();
     }
     catch (InitSockError)
@@ -111,7 +111,6 @@ int main(void)
         printf("recv failed with error: %d\n", WSAGetLastError());
         return RECV_ERROR;
     }
-
 
     return SUCCESS;
 }

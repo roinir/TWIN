@@ -1,7 +1,22 @@
+#undef UNICODE
+
+#define WIN32_LEAN_AND_MEAN
+
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+// Need to link with Ws2_32.lib
+#pragma comment (lib, "Ws2_32.lib")
+// #pragma comment (lib, "Mswsock.lib")
+
 #include "Server.h"
 
 Server::Server()
 {
+    printf("Initializing the server\n");
     WSADATA wsaData;
 
     struct addrinfo hints;
@@ -24,6 +39,8 @@ Server::Server()
     m_startListening();
 
     m_acceptConnection();
+
+    m_communicate();
 }
 
 void Server::m_initWinsock(WSADATA* wsaData)
@@ -45,6 +62,7 @@ void Server::m_resolveAddrAndPort(struct addrinfo* hints)
 
 void Server::m_initListening()
 {
+    printf("Server starts listening\n");
     m_ListenSocket = socket(m_result->ai_family, m_result->ai_socktype, m_result->ai_protocol);
     if (m_ListenSocket == INVALID_SOCKET) {
         freeaddrinfo(m_result);
@@ -55,6 +73,7 @@ void Server::m_initListening()
 
 void Server::m_bindSock()
 {
+    printf("Server binds with socket\n");
     // Setup the TCP listening socket
     m_iResult = bind(m_ListenSocket, m_result->ai_addr, (int)m_result->ai_addrlen);
     if (m_iResult == SOCKET_ERROR) {
@@ -91,6 +110,7 @@ void Server::m_startListening()
         WSACleanup();
         throw StartListeningError();
     }
+    printf("Server is listening\n");
 }
 
 void Server::m_acceptConnection()
@@ -101,10 +121,12 @@ void Server::m_acceptConnection()
         WSACleanup();
         throw AcceptConnectionError();
     }
+    printf("Server accepted the connection\n");
 }
 
 void Server::m_communicate()
 {
+    printf("Server started communicating\n");
     int iSendResult;
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
