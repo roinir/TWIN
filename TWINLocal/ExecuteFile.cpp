@@ -8,18 +8,3 @@ void runExec(LPCSTR filePath)
 	//TODO throw exception
 	//create another function that fixes string to double '\'
 }
-
-/*
-LPCSTR convertToDoubleSlash(LPCSTR filePath)
-{
-	std::string tempPath = filePath;
-	for (int i = 0; i < tempPath.size(); i++)
-	{
-		if (tempPath.at(i) == '\\')
-		{
-
-		}
-	}
-	//tempPath.replace(i, 1, "\\");
-}
-*/
