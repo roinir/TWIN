@@ -19,5 +19,5 @@ void DisplayResourceNAMessageBoxW()
 int DisplayWindowException::handleException() const
 {
 	std::cout << "Exception displaying the window occured";
-	return openingKeyException;
+	return displayWindowException;
 }
