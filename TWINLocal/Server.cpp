@@ -13,6 +13,7 @@
 // #pragma comment (lib, "Mswsock.lib")
 
 #include "Server.h"
+#include <string>
 
 Server::Server()
 {
@@ -131,13 +132,34 @@ void Server::m_communicate()
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
     do {
-
+        printf("Starting loop\n");
         m_iResult = recv(m_ClientSocket, recvbuf, recvbuflen, 0);
+        printf("String before if: %s\n", recvbuf);
         if (m_iResult > 0) {
             printf("Bytes received: %d\n", m_iResult);
 
             // Echo the buffer back to the sender
-            iSendResult = send(m_ClientSocket, recvbuf, m_iResult, 0);
+            if (m_iResult < DEFAULT_BUFLEN)
+            {
+                recvbuf[m_iResult] = '\0';
+                printf("String after if: %s\n", recvbuf);
+                if (strcmp(recvbuf, "Ping") == 0)
+                {
+                    std::string response("Pong");
+                    iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
+                    continue;
+                }
+                else if (strcmp(recvbuf, "exit") == 0)
+                {
+                    printf("Connection closing...\n");
+                    std::string response("Closing connection");
+                    iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
+                    break;
+                }
+            }
+            std::string response("Unknown command");
+            iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
+            
             if (iSendResult == SOCKET_ERROR) {
                 closesocket(m_ClientSocket);
                 WSACleanup();
@@ -145,13 +167,10 @@ void Server::m_communicate()
             }
             printf("Bytes sent: %d\n", iSendResult);
         }
-        else if (m_iResult == 0)
-            printf("Connection closing...\n");
-        else {
-            closesocket(m_ClientSocket);
-            WSACleanup();
+        else
+        {
             throw RecvError();
         }
 
-    } while (m_iResult > 0);
+    } while (TRUE);
 }
