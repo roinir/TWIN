@@ -18,6 +18,7 @@ enum Exceptions
 	acceptConnectionException,
 	sendException,
 	recvException,
+	shellExecuteException,
 	unknownException
 };
 
