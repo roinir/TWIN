@@ -134,7 +134,6 @@ void Server::m_communicate()
     do {
         printf("Starting loop\n");
         m_iResult = recv(m_ClientSocket, recvbuf, recvbuflen, 0);
-        printf("String before if: %s\n", recvbuf);
         if (m_iResult > 0) {
             printf("Bytes received: %d\n", m_iResult);
 
