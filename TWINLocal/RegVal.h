@@ -9,16 +9,16 @@ class RegVal
 {
 	public:
 		/**
+		* @brief constructor which is used to initialize a RegVal object and used to create a key and set its value
+		* @throws ErrorFindingKey, ErrorOpeningKey if m_CreateRegKey or m_setRegVal couldn't fund the key or open the key
+		*/
+		RegVal();
+
+		/**
 		* @brief destructor to close key handles
 		*/
 		~RegVal();
 
-		/**
-		* @brief used to create a key and set its value
-		* @return void
-		* @throws ErrorFindingKey, ErrorOpeningKey if m_CreateRegKey or m_setRegVal couldn't fund the key or open the key
-		*/
-		void createAndSetRegVal();
 
 	private:
 		
