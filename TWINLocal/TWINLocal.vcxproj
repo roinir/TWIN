@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayBox.h" />
+    <ClInclude Include="Exception.h" />
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="RegVal.h" />
   </ItemGroup>

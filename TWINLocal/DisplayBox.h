@@ -1,10 +1,16 @@
 #pragma once
-
 #include <windows.h>
 #include <iostream>
+#include "Exception.h"
+
 
 /**
 * @brief displays the message box and saves the user's click
-* @return user's action 0 means it failed and 1 is a success
+* @throws DisplayWindowError if there is an error displaying the window
 */
-int DisplayResourceNAMessageBoxW();
+void DisplayResourceNAMessageBoxW();
+
+class DisplayWindowException: public ExceptionClass
+{
+	int handleException() const override;
+};

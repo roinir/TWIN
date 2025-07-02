@@ -2,6 +2,8 @@
 #include <windows.h>
 #include <iostream>
 
+#include "Exception.h"
+
 
 class RegVal
 {
@@ -25,14 +27,14 @@ class RegVal
 		* @return void
 		* @throws ErrorFindingKey, ErrorOpeningKey if it doesn't find the key or open the key
 		*/
-		void m_CreateRegKey();
+		void CreateRegKey();
 
 		/**
 		* @brief used to set a key with a value
 		* @return void
 		* @throws ErrorFindingKey, ErrorOpeningKey if it doesn't find the key or open the key
 		*/
-		void m_setRegVal();
+		void setRegVal();
 
 		HKEY m_currentUserKey = NULL;
 
@@ -40,12 +42,12 @@ class RegVal
 
 };
 
-class ErrorOpeningKey
+class OpeningKeyException: ExceptionClass
 {
-	// left blank intentionally
+	int handleException() const override;
 };
 
-class ErrorFindingKey
+class FindingKeyException: ExceptionClass
 {
-	// left blank intentionally
+	int handleException() const override;
 };

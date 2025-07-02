@@ -38,5 +38,8 @@
     <ClInclude Include="Mutex.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,17 +1,15 @@
 #include "RegVal.h"
 
+const std::string nameOfNewRegKey = "TechnicianStartupWindow";
+const std::string pathToRegKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
+const std::string pathToExe = "C:\\Users\\roini\\source\\repos\\TWINLocal\\Debug\\TWINLocal.exe";
 
-void RegVal::m_CreateRegKey()
+
+
+void RegVal::CreateRegKey()
 {
 	RegOpenCurrentUser(KEY_ALL_ACCESS, &m_currentUserKey);
-	const char* regValueForStartup = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-	LPCSTR lpSubKey = reinterpret_cast<LPCSTR>(regValueForStartup);
-	DWORD ulOptions = 0;
-	REGSAM samDesired = KEY_SET_VALUE;
-	LPSTR lpClass = NULL;
-	DWORD dwOptions = REG_OPTION_VOLATILE;
-	LPDWORD lpdwDisposition = LPDWORD();
-	LSTATUS regCreate = RegCreateKeyExA(m_currentUserKey, lpSubKey, 0, lpClass, REG_OPTION_VOLATILE, samDesired, NULL, &m_phkResult, lpdwDisposition);
+	LSTATUS regCreate = RegCreateKeyExA(m_currentUserKey, reinterpret_cast<LPCSTR>(pathToRegKey.c_str()), 0, NULL, REG_OPTION_VOLATILE, KEY_SET_VALUE, NULL, &m_phkResult, LPDWORD());
 
 	if (regCreate != ERROR_SUCCESS)
 	{
@@ -19,53 +17,46 @@ void RegVal::m_CreateRegKey()
 			throw ERROR_FILE_NOT_FOUND;
 		}
 		else {
-			throw ErrorOpeningKey();
-			//const DWORD size = 100 + 1;
-			///WCHAR buffer[size];
-			//FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, reinterpret_cast<LPCVOID>(regKey), 0, 0, buffer, NULL, NULL);
-			//std::cout << buffer;
+			throw OpeningKeyException();
 		}
 	}
 }
 
-void RegVal::m_setRegVal() //better names, auto runs
+void RegVal::setRegVal()
 {
-	LPCSTR lpValueName = "TechnicianStartupWindow";
-	DWORD dwType = REG_SZ;
-	const char* pathToExe = "C:\\Users\\roini\\source\\repos\\TWINLocal\\Debug\\TWINLocal.exe";
-	int count = 0;
-	char nullTerminator = NULL;
-	while (pathToExe[count] != nullTerminator)
-	{
-		count++;
-	}
-	const BYTE* lpData = reinterpret_cast<const BYTE*>(pathToExe);
-	DWORD cbData = count; //23 or 24 with null ptr
-	LSTATUS regSetVal = RegSetValueExA(m_phkResult, lpValueName, 0, dwType, lpData, cbData);
-
+	LSTATUS regSetVal = RegSetValueExA(m_phkResult, nameOfNewRegKey.c_str(), 0, REG_SZ, reinterpret_cast<const BYTE*>(pathToExe.c_str()), pathToExe.size());
 	if (regSetVal != ERROR_SUCCESS)
 	{
 		if (regSetVal == ERROR_FILE_NOT_FOUND) {
-			throw ErrorFindingKey();
+			throw FindingKeyException();
 		}
 		else {
-			throw ErrorOpeningKey();
-			//const DWORD size = 100 + 1;
-			///WCHAR buffer[size];
-			//FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, reinterpret_cast<LPCVOID>(regKey), 0, 0, buffer, NULL, NULL);
-			//std::cout << buffer;
+			throw OpeningKeyException();
 		}
 	}
 }
 
 void RegVal::createAndSetRegVal()
 {
-	m_CreateRegKey();
-	m_setRegVal();
+	CreateRegKey();
+	setRegVal();
 }
 
 RegVal::~RegVal()
 {
 	RegCloseKey(m_currentUserKey);
 	RegCloseKey(m_phkResult);
+}
+
+
+int OpeningKeyException::handleException() const
+{
+	std::cout << "Error opening key.\n";
+	return openingKeyException;
+}
+
+int FindingKeyException::handleException() const
+{
+	std::cout << "Key not found.\n";
+	return openingKeyException;
 }
