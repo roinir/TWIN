@@ -1,28 +1,35 @@
 #include "Mutex.h"
 
+
 Mutex::Mutex() : m_ghMutex(CreateMutex(NULL, FALSE, TEXT("TechnicianMutex")))
 {
-    // left blank intentionally
+    if (m_ghMutex == NULL)
+    {
+        throw CreateMutexException();
+    }
 }
-
 
 Mutex::~Mutex()
 {
     CloseHandle(m_ghMutex);
 }
 
-BOOL Mutex::isMutexTaken() const 
+void Mutex::isMutexTaken() const 
 {
-    if (m_ghMutex == NULL)
+    if (GetLastError() == ERROR_ALREADY_EXISTS)
     {
-        throw CreateMutexError();
+        throw MutexTakenException();
     }
-    else
-    {
-        if (GetLastError() == ERROR_ALREADY_EXISTS)
-        {
-            return TRUE;
-        }
-    }
-    return FALSE;
+}
+
+int CreateMutexException::handleException() const
+{
+    std::cout << "CreateMutex error: " << GetLastError() << "\n";
+    return creatingMutexException;
+}
+
+int MutexTakenException::handleException() const
+{
+    std::cout << "Mutex is already taken: " << GetLastError() << "\n";
+    return mutexTakenException;
 }

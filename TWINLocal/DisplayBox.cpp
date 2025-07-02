@@ -1,7 +1,7 @@
 #include "DisplayBox.h"
 
 
-int DisplayResourceNAMessageBoxW()
+void DisplayResourceNAMessageBoxW()
 {
 	int msgboxID = MessageBoxW(
 		NULL,
@@ -10,5 +10,14 @@ int DisplayResourceNAMessageBoxW()
 		NULL
 	);
 
-	return msgboxID;
+	if (msgboxID != 1)
+	{
+		throw DisplayWindowException();
+	}
+}
+
+int DisplayWindowException::handleException() const
+{
+	std::cout << "Exception displaying the window occured";
+	return openingKeyException;
 }

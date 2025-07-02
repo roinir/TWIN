@@ -147,9 +147,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayBox.h" />
+    <ClInclude Include="Exception.h" />
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="RegVal.h" />
     <ClInclude Include="Server.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="client.py" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

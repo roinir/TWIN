@@ -1,4 +1,5 @@
 #pragma once
+#include "Exception.h"
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
@@ -7,82 +8,121 @@
 class Server
 {
     public:
-        // constructor
+        
+        /**
+        * @brief constructor to initialize a Server object
+        * @throws InitSockException, GetAddrInfoException, InitListenException, BindException, StartListeningException, AcceptConnectionException, SendException, RecvException, ShutDownException
+        *         - it depends on the functions that are called in the consturctor
+        */
         Server();
-        // destructor
+
+        /**
+        * @brief destructor to close handles
+        */
         ~Server();
     
     private:
-        // Initialize Winsock
-        void m_initWinsock(WSADATA* wsaData);
+        /**
+        * @brief Initializes Winsock
+        * @param wsaData contains information about Windows Sockets
+        * @return void
+        * @throws InitSockException if WSAStartup fails
+        */
+        void initWinsock(WSADATA* wsaData);
 
-        // Resolve the server address and port
-        void m_resolveAddrAndPort(struct addrinfo* hints);
+        /**
+        * @brief Resolves the server address and port
+        * @param hints pointer to a struct containing the adress info of the server
+        * @return void
+        * @throws GetAddrInfoException if getaddrinfo fails
+        */
+        void resolveAddrAndPort(struct addrinfo* hints);
 
-        // Create a SOCKET for the server to listen for client connections.
-        void m_initListening();
+        /**
+        * @brief Creates a SOCKET for the server to listen for client connections.
+        * @return void
+        * @throws InitListenException if it initialized an invalid socket
+        */
+        void initListening();
 
-        // Setup the TCP listening socket
-        void m_bindSock();
+        /**
+        * @brief Sets up the TCP listening socket
+        * @return void
+        * @throws BindException if bind fails to bind the socket
+        */
+        void bindSock();
 
         struct addrinfo* m_result = NULL;
 
-        void m_startListening();
+        /**
+        * @brief Starts listening for connections
+        * @return void
+        * @throws StartListeningException if the listen function fails
+        */
+        void startListening();
 
-        // Accept a client socket
-        void m_acceptConnection();
+        /**
+        * @brief Accepts a client socket
+        * @return void
+        * @throws AcceptConnectionException if the accept function failed
+        */
+        void acceptConnection();
 
         SOCKET m_ListenSocket = INVALID_SOCKET;
 
         SOCKET m_ClientSocket = INVALID_SOCKET;
 
-        // Receive until the peer shuts down the connection
-        void m_communicate();
+        /**
+        * @brief Receives until the peer shuts down the connection
+        * @return void
+        * @throws SendException if the send function failed and RecvException if the recv function failed
+        */
+        void communicate();
 
         int m_iResult;
 };
 
-class InitSockError
+class InitSockException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };
 
-class GetAddrInfoError
+class GetAddrInfoException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };
 
-class InitListenError
+class InitListenException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };
 
-class BindError
+class BindException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };
 
-class StartListeningError
+class StartListeningException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };
 
-class AcceptConnectionError
+class AcceptConnectionException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };
 
-class SendError
+class SendException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };
 
-class RecvError
+class RecvException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };
 
-class ShutDownError
+class ShutDownException : ExceptionClass
 {
-    //left blank intentionally
+    int handleException() const override;
 };

@@ -23,7 +23,7 @@ Server::Server()
     struct addrinfo hints;
 
 
-    m_initWinsock(&wsaData);
+    initWinsock(&wsaData);
 
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -31,57 +31,51 @@ Server::Server()
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE;
 
-    m_resolveAddrAndPort(&hints);
+    resolveAddrAndPort(&hints);
 
-    m_initListening();
+    initListening();
 
-    m_bindSock();
+    bindSock();
 
-    m_startListening();
+    startListening();
 
-    m_acceptConnection();
+    acceptConnection();
 
-    m_communicate();
+    communicate();
 }
 
-void Server::m_initWinsock(WSADATA* wsaData)
+void Server::initWinsock(WSADATA* wsaData)
 {
     m_iResult = WSAStartup(MAKEWORD(2, 2), wsaData);
     if (m_iResult != 0) {
-        throw InitSockError();
+        throw InitSockException();
     }
 }
 
-void Server::m_resolveAddrAndPort(struct addrinfo* hints)
+void Server::resolveAddrAndPort(struct addrinfo* hints)
 {
     int m_iResult = getaddrinfo(NULL, DEFAULT_PORT, hints, &m_result);
     if (m_iResult != 0) {
-        WSACleanup();
-        throw GetAddrInfoError();
+        throw GetAddrInfoException();
     }
 }
 
-void Server::m_initListening()
+void Server::initListening()
 {
     printf("Server starts listening\n");
     m_ListenSocket = socket(m_result->ai_family, m_result->ai_socktype, m_result->ai_protocol);
     if (m_ListenSocket == INVALID_SOCKET) {
-        freeaddrinfo(m_result);
-        WSACleanup();
-        throw InitListenError();
+        throw InitListenException();
     }
 }
 
-void Server::m_bindSock()
+void Server::bindSock()
 {
     printf("Server binds with socket\n");
     // Setup the TCP listening socket
     m_iResult = bind(m_ListenSocket, m_result->ai_addr, (int)m_result->ai_addrlen);
     if (m_iResult == SOCKET_ERROR) {
-        freeaddrinfo(m_result);
-        closesocket(m_ListenSocket);
-        WSACleanup();
-        throw BindError();
+        throw BindException();
     }
 }
 
@@ -92,63 +86,56 @@ Server::~Server()
 
     // shutdown the connection since we're done
     m_iResult = shutdown(m_ClientSocket, SD_SEND);
-    if (m_iResult == SOCKET_ERROR) {
-        closesocket(m_ClientSocket);
-        WSACleanup();
-        throw ShutDownError();
-    }
 
     // cleanup
     closesocket(m_ClientSocket);
+    closesocket(m_ListenSocket);
     WSACleanup();
 }
 
-void Server::m_startListening()
+void Server::startListening()
 {
     m_iResult = listen(m_ListenSocket, SOMAXCONN);
     if (m_iResult == SOCKET_ERROR) {
-        closesocket(m_ListenSocket);
-        WSACleanup();
-        throw StartListeningError();
+        throw StartListeningException();
     }
     printf("Server is listening\n");
 }
 
-void Server::m_acceptConnection()
+void Server::acceptConnection()
 {
     m_ClientSocket = accept(m_ListenSocket, NULL, NULL);
     if (m_ClientSocket == INVALID_SOCKET) {
-        closesocket(m_ListenSocket);
-        WSACleanup();
-        throw AcceptConnectionError();
+        throw AcceptConnectionException();
     }
     printf("Server accepted the connection\n");
 }
 
-void Server::m_communicate()
+void Server::communicate()
 {
     printf("Server started communicating\n");
     int iSendResult;
-    char recvbuf[DEFAULT_BUFLEN];
+    std::string recvbuf;
+    char tempRecv[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
     do {
         printf("Starting loop\n");
-        m_iResult = recv(m_ClientSocket, recvbuf, recvbuflen, 0);
+        m_iResult = recv(m_ClientSocket, tempRecv, recvbuflen, 0);
         if (m_iResult > 0) {
             printf("Bytes received: %d\n", m_iResult);
 
             // Echo the buffer back to the sender
             if (m_iResult < DEFAULT_BUFLEN)
             {
-                recvbuf[m_iResult] = '\0';
-                printf("String after if: %s\n", recvbuf);
-                if (strcmp(recvbuf, "Ping") == 0)
+                tempRecv[m_iResult] = '\0';
+                recvbuf = tempRecv;
+                if (recvbuf.compare("Ping") == 0)
                 {
                     std::string response("Pong");
                     iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
                     continue;
                 }
-                else if (strcmp(recvbuf, "exit") == 0)
+                else if (recvbuf.compare("exit") == 0)
                 {
                     printf("Connection closing...\n");
                     std::string response("Closing connection");
@@ -162,14 +149,68 @@ void Server::m_communicate()
             if (iSendResult == SOCKET_ERROR) {
                 closesocket(m_ClientSocket);
                 WSACleanup();
-                throw SendError();
+                throw SendException();
             }
             printf("Bytes sent: %d\n", iSendResult);
         }
         else
         {
-            throw RecvError();
+            throw RecvException();
         }
 
     } while (TRUE);
+}
+
+int InitSockException::handleException() const
+{
+    printf("WSAStartup failed\n");
+    return initSockException;
+}
+
+int GetAddrInfoException::handleException() const
+{
+    printf("getaddrinfo failed\n");
+    return getAddrInfoException;
+}
+
+int InitListenException::handleException() const
+{
+    printf("socket failed with error: %ld\n", WSAGetLastError());
+    return initListenException;
+}
+
+int BindException::handleException() const
+{
+    printf("bind failed with error: %d\n", WSAGetLastError());
+    return bindException;
+}
+
+int StartListeningException::handleException() const
+{
+    printf("listen failed with error: %d\n", WSAGetLastError());
+    return startListeningException;
+}
+
+int AcceptConnectionException::handleException() const
+{
+    printf("accept failed with error: %d\n", WSAGetLastError());
+    return acceptConnectionException;
+}
+
+int SendException::handleException() const
+{
+    printf("send failed with error: %d\n", WSAGetLastError());
+    return sendException;
+}
+
+int RecvException::handleException() const
+{
+    printf("recv failed with error: %d\n", WSAGetLastError());
+    return recvException;
+}
+
+int ShutDownException::handleException() const
+{
+    printf("shutdown failed with error: %d\n", WSAGetLastError());
+    return shotDownException;
 }
