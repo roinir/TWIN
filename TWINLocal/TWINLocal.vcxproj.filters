@@ -6,6 +6,7 @@
     <ClCompile Include="RegVal.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="TWINLocal.cpp" />
+    <ClCompile Include="ExecuteFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DisplayBox.h" />
@@ -13,23 +14,9 @@
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="RegVal.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="ExecuteFile.h" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <None Include="client.py" />
-=======
-    <ClInclude Include="DisplayBox.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RegVal.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mutex.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Exception.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
->>>>>>> technician
   </ItemGroup>
 </Project>

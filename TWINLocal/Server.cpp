@@ -14,6 +14,7 @@
 
 #include "Server.h"
 #include <string>
+//#include "ExecuteFile.h"
 
 Server::Server()
 {
@@ -142,6 +143,26 @@ void Server::communicate()
                     iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
                     break;
                 }
+                /*
+                else if (recvbuf.compare("RUN") == 0)
+                {
+                    std::string response("Which file would you like to run?");
+                    iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
+                    m_iResult = recv(m_ClientSocket, tempRecv, recvbuflen, 0);
+                    if (m_iResult < DEFAULT_BUFLEN)
+                    {
+                        tempRecv[m_iResult] = '\0';
+                        recvbuf = tempRecv;
+                        runExec(tempRecv);
+                    }
+                    else
+                    {
+                        std::string response("Couldn't run the path you submited");
+                        iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
+                    }
+                    break;
+                }
+                */
             }
             std::string response("Unknown command");
             iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);

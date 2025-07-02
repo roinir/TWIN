@@ -6,8 +6,6 @@
 #include "Exception.h"
 
 
-
-
 /**
 * @brief main function that runs all the logic
 * @return success, creatingMutexException, mutexTakenException, creatingKeyException, openingKeyException - 0, 1, 2, 3, 4
@@ -30,7 +28,7 @@ int main(void)
     catch (ExceptionClass e)
     {
         return e.handleException();
-    }
+    }    
 
     return success;
 }

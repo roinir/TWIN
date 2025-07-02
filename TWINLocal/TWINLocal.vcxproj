@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DisplayBox.cpp" />
+    <ClCompile Include="ExecuteFile.cpp" />
     <ClCompile Include="Mutex.cpp" />
     <ClCompile Include="RegVal.cpp" />
     <ClCompile Include="Server.cpp" />
@@ -148,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="DisplayBox.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="ExecuteFile.h" />
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="RegVal.h" />
     <ClInclude Include="Server.h" />
