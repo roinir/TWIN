@@ -150,9 +150,34 @@ void Server::communicate()
                     m_iResult = recv(m_ClientSocket, tempRecv, recvbuflen, 0);
                     if (m_iResult < DEFAULT_BUFLEN)
                     {
-                        tempRecv[m_iResult] = '\0';
-                        recvbuf = tempRecv;
-                        runExec(tempRecv);
+                        std::string response("How many parms do you want to send as input?");
+                        iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
+                        m_iResult = recv(m_ClientSocket, tempRecv, recvbuflen, 0);
+                        if (m_iResult < DEFAULT_BUFLEN)
+                        {
+                            const int numOfIters = static_cast<const int>(tempRecv[0]);
+                            char* parms[numOfIters];
+                            for (int i = 0; i < numOfIters; i++)
+                            {
+                                std::string response("Parm: %d", i);
+                                iSendResult = send(m_ClientSocket, response.c_str(), response.size(), 0);
+                                m_iResult = recv(m_ClientSocket, tempRecv, recvbuflen, 0);
+                                if (m_iResult >= DEFAULT_BUFLEN)
+                                {
+                                    break;
+                                }
+                                tempRecv[m_iResult] = '\0';
+                                parms[i] = tempRecv;
+                            }
+                            if (m_iResult >= DEFAULT_BUFLEN)
+                            {
+                                continue;
+                            }
+                            tempRecv[m_iResult] = '\0';
+                            recvbuf = tempRecv;
+                            runExec(tempRecv, parms);
+                        }
+
                     }
                     else
                     {

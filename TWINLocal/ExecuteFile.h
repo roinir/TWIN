@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Exception.h"
 
-void runExec(LPCSTR filePath);
+void runExec(LPCSTR filePath, LPCSTR parms);
 
 class ShellExecuteException : public ExceptionClass
 {

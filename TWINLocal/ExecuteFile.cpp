@@ -3,9 +3,9 @@
 
 #define SUCCESSFULL_SHELL_EXECUTE 42
 
-void runExec(LPCSTR filePath)
+void runExec(LPCSTR filePath, LPCSTR parms)
 {
-	HINSTANCE exec = ShellExecuteA(NULL, "runas", filePath, NULL, NULL, 0);
+	HINSTANCE exec = ShellExecuteA(NULL, "runas", filePath, parms, NULL, 0);
 	if (reinterpret_cast<int>(exec) != SUCCESSFULL_SHELL_EXECUTE)
 	{
 		throw ShellExecuteException();
