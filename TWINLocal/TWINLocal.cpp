@@ -18,7 +18,7 @@ int main(void)
         Mutex mutex = Mutex();
         mutex.isMutexTaken();
 
-        RegVal().createAndSetRegVal();
+        RegVal();
 
         DisplayResourceNAMessageBoxW();
 

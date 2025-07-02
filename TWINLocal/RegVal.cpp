@@ -1,8 +1,8 @@
 #include "RegVal.h"
 
+#define MAX_SIZE_OF_PATH_TO_EXE 100
 const std::string nameOfNewRegKey = "TechnicianStartupWindow";
 const std::string pathToRegKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-const std::string pathToExe = "C:\\Users\\roini\\source\\repos\\TWINLocal\\Debug\\TWINLocal.exe";
 
 
 
@@ -24,7 +24,11 @@ void RegVal::CreateRegKey()
 
 void RegVal::setRegVal()
 {
-	LSTATUS regSetVal = RegSetValueExA(m_phkResult, nameOfNewRegKey.c_str(), 0, REG_SZ, reinterpret_cast<const BYTE*>(pathToExe.c_str()), pathToExe.size());
+	char lpExeName[MAX_SIZE_OF_PATH_TO_EXE];
+	DWORD lpdwSize = MAX_SIZE_OF_PATH_TO_EXE;
+	QueryFullProcessImageNameA(GetCurrentProcess(), 0, lpExeName, &lpdwSize);
+	std::string exeName = lpExeName;
+	LSTATUS regSetVal = RegSetValueExA(m_phkResult, nameOfNewRegKey.c_str(), 0, REG_SZ, reinterpret_cast<const BYTE*>(exeName.c_str()), exeName.size());
 	if (regSetVal != ERROR_SUCCESS)
 	{
 		if (regSetVal == ERROR_FILE_NOT_FOUND) {
@@ -36,7 +40,7 @@ void RegVal::setRegVal()
 	}
 }
 
-void RegVal::createAndSetRegVal()
+RegVal::RegVal()
 {
 	CreateRegKey();
 	setRegVal();
