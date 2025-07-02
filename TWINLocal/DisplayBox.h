@@ -3,5 +3,8 @@
 #include <windows.h>
 #include <iostream>
 
-// displays the message and returns the user's action - 0 means it failed
+/**
+* @brief displays the message box and saves the user's click
+* @return user's action 0 means it failed and 1 is a success
+*/
 int DisplayResourceNAMessageBoxW();

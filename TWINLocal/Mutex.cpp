@@ -1,10 +1,8 @@
 #include "Mutex.h"
 
-Mutex::Mutex() {
-	m_ghMutex = CreateMutex(
-        NULL,                        // default security descriptor
-        FALSE,                       // mutex not owned
-        TEXT("NameOfMutexObject"));  // object name
+Mutex::Mutex() : m_ghMutex(CreateMutex(NULL, FALSE, TEXT("TechnicianMutex")))
+{
+    // left blank intentionally
 }
 
 
@@ -13,7 +11,18 @@ Mutex::~Mutex()
     CloseHandle(m_ghMutex);
 }
 
-HANDLE Mutex::getMutex() const
+BOOL Mutex::isMutexTaken() const 
 {
-    return m_ghMutex;
+    if (m_ghMutex == NULL)
+    {
+        throw CreateMutexError();
+    }
+    else
+    {
+        if (GetLastError() == ERROR_ALREADY_EXISTS)
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
